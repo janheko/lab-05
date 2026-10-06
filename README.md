@@ -2,8 +2,8 @@
 
 ## Student Details
 
-- **Full Name:** `<Enter name>`
-- **CCID:** `<Enter ccid>`
+- **Full Name:** `Uchenna Ibeziako`
+- **CCID:** `ibeziako`
 
 ## References and Resources
 
