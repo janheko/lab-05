@@ -1,6 +1,7 @@
 package com.example.listycity
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,6 +13,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.OutlinedTextField
@@ -32,7 +35,9 @@ fun CityListScreen(
     cities: List<City>,
     onAddCity: (City) -> Unit,
     onUpdateCity: (City, City) -> Unit,
+    onDeleteCity: (City) -> Unit,
     modifier: Modifier = Modifier
+
 ) {
     var newCityName by remember { mutableStateOf("") }
     var newProvinceName by remember { mutableStateOf("") }
@@ -40,6 +45,7 @@ fun CityListScreen(
     var selectedCity by remember { mutableStateOf<City?>(null) }
     var editedCityName by remember { mutableStateOf("") }
     var editedProvinceName by remember { mutableStateOf("") }
+    var expanded by remember { mutableStateOf(false) }
 
     Column(modifier = modifier.fillMaxSize()) {
         Row(
@@ -166,6 +172,9 @@ fun CityListScreen(
                         selectedCity = city
                         editedCityName = city.name
                         editedProvinceName = city.province
+                    },
+                    onDeleteClick = {
+                        onDeleteCity(city)
                     }
                 )
                 if (index < cities.lastIndex) {
@@ -173,19 +182,25 @@ fun CityListScreen(
                 }
             }
         }
+
+        }
     }
-}
 
 
 @Composable
 fun CityRow(
     city: City,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onDeleteClick: () -> Unit
 ) {
+
+    var showMenu by remember { mutableStateOf(false) }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick() }
+            .combinedClickable( onClick = {onClick()},
+                onLongClick = {showMenu = true})
             .padding(horizontal = 20.dp, vertical = 16.dp)
     ) {
         Text(
@@ -198,6 +213,25 @@ fun CityRow(
             text = city.province,
             fontSize = 30.sp,
             modifier = Modifier.weight(1f)
+        )
+    }
+
+    DropdownMenu(
+        expanded = showMenu,
+        onDismissRequest = { showMenu = false }
+    ) {
+        DropdownMenuItem(
+            text = { Text("Delete") },
+            onClick = {
+                showMenu = false
+                onDeleteClick()
+            }
+        )
+        DropdownMenuItem(
+            text = { Text("Cancel") },
+            onClick = {
+                showMenu = false
+            }
         )
     }
 }
@@ -213,7 +247,8 @@ fun CityListScreenPreview() {
                 City("Calgary", "AB")
             ),
             onAddCity = {},
-            onUpdateCity = { _, _ -> }
+            onUpdateCity = { _, _ -> },
+            onDeleteCity = {}
         )
     }
 }
