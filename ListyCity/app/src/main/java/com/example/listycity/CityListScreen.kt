@@ -196,6 +196,9 @@ fun CityRow(
 
     var showMenu by remember { mutableStateOf(false) }
 
+    //Anthropic, Claude, "how to do long click gives me option in a clickable row?"
+    //Fix: combinedClickable as a modifier instead of just clickable and Dropdown menu as a composable feature
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -220,6 +223,7 @@ fun CityRow(
         expanded = showMenu,
         onDismissRequest = { showMenu = false }
     ) {
+
         DropdownMenuItem(
             text = { Text("Delete") },
             onClick = {
@@ -227,10 +231,12 @@ fun CityRow(
                 onDeleteClick()
             }
         )
+
         DropdownMenuItem(
             text = { Text("Cancel") },
             onClick = {
                 showMenu = false
+
             }
         )
     }
